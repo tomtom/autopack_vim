@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-01-18
-" @Revision:    26
+" @Last Change: 2017-02-11
+" @Revision:    40
 " GetLatestVimScripts: 0 0 :AutoInstall: autopack.vim
 " Load VIM packages as needed
 
@@ -31,10 +31,28 @@ if !exists('g:autopack_config')
 endif
 
 
-command! -nargs=+ Autocommand call autopack#Autocommand([<f-args>])
-command! -nargs=+ Automap call autopack#Map([<f-args>])
+" :display: :Autocommand PACK COMMAND
+" Load PACK when invoking COMMAND for the first time.
+command! -nargs=+ Autocommand call autopack#NewAutocommand([<f-args>])
 
-" command! -nargs=+ Autofilepattern call autopack#Filetypepatterns([<f-args>])
+" :display: :Automap PACK MAP
+" Load PACK when invoking MAP for the first time. MAP can be any |:map| 
+" related command.
+"
+" Example >
+"     Automap ttoc_vim nnoremap <Leader>cc :TToC<cr>
+command! -nargs=+ Automap call autopack#NewMap([<f-args>])
+
+" :display: :Autofiletype PACK FILETYPE...
+" Load PACK when editing a file with FILETYPE for the first time. 
+" Multiple filetypes can be gives.
+command! -nargs=+ Autofiletype call autopack#NewFiletype([<f-args>])
+
+" :display: :Autofilepattern PACK GLOB_PATTERN...
+" Load PACK when editing a file matching GLOB_PATTERN for the first 
+" time. Multiple filename patterns can be gives.
+command! -nargs=+ Autofilepattern call autopack#NewFilepattern([<f-args>])
+
 " command! -nargs=+ Autoautoload call autopack#Autoautoload(<q-args>)
 " command! -nargs=+ Autofunction call autopack#Autofunction(<q-args>)
 
@@ -44,7 +62,7 @@ augroup Autopack
     autocmd FuncUndefined * call autopack#FuncUndefined(expand("<afile>"))
     autocmd FileType * call autopack#AutoFiletype(expand("<amatch>"))
     autocmd SourcePre */pack/* call autopack#ConfigPack(expand("<amatch>"))
-    " autocmd BufReadPre,BufNew * call autopack#Filetypepatterns(expand("<afile>"))
+    autocmd BufReadPre,BufNew * call autopack#Filetypepatterns(expand("<afile>"))
 augroup END
 
 
