@@ -1,0 +1,11 @@
+{
+    "name" : "autopack",
+    "version" : "dev",
+    "author" : "Tom Link <micathom at gmail com>",
+    "maintainer" : "Tom Link <micathom at gmail com>",
+    "repository" : {"type": "git", "url": "git://github.com/tomtom/autopack_vim.git"},
+    "dependencies" : {
+    "tlib": {"type": "git", "url": "git://github.com/tomtom/tlib_vim.git"}
+  },
+    "description" : "Load optional packs by command, map, filetype etc."
+}
