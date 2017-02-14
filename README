@@ -49,7 +49,7 @@ your vimrc file.
 
 
 Dependencies:
-  tlib :: http://github.com/tomtom/tlib_vim
+  tlib (optional) :: http://github.com/tomtom/tlib_vim
 
 License: GPLv3 or later
 Install: See http://github.com/tomtom/vimtlib/blob/master/INSTALL.TXT
