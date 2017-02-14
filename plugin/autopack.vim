@@ -1,9 +1,9 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-02-11
-" @Revision:    40
-" GetLatestVimScripts: 0 0 :AutoInstall: autopack.vim
+" @Last Change: 2017-02-14
+" @Revision:    41
+" GetLatestVimScripts: 5526 0 :AutoInstall: autopack.vim
 " Load VIM packages as needed
 
 if &cp || exists("loaded_autopack")
