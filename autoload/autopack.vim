@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-02-14
-" @Revision:    139
+" @Last Change: 2017-02-15
+" @Revision:    140
 
 
 if !exists('g:loaded_tlib') " optional
@@ -26,12 +26,14 @@ endif
 
 
 function! autopack#NewAutocommand(args) abort "{{{3
-    let [pack, cmd] = a:args
-    exec printf('command! -bang -nargs=? %s call s:Loadcommand(%s, %s, %s .''<bang> ''. <q-args>)',
-                \ cmd,
-                \ string(pack),
-                \ string(cmd),
-                \ string(cmd))
+    let [pack; cmds] = a:args
+    for cmd in cmds
+        exec printf('command! -bang -nargs=? %s call s:Loadcommand(%s, %s, %s .''<bang> ''. <q-args>)',
+                    \ cmd,
+                    \ string(pack),
+                    \ string(cmd),
+                    \ string(cmd))
+    endfor
 endf
 
 

@@ -31,7 +31,7 @@ if !exists('g:autopack_config')
 endif
 
 
-" :display: :Autocommand PACK COMMAND
+" :display: :Autocommand PACK COMMAND...
 " Load PACK when invoking COMMAND for the first time.
 command! -nargs=+ Autocommand call autopack#NewAutocommand([<f-args>])
 
