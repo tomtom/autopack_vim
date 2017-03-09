@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-02-14
-" @Revision:    41
+" @Last Change: 2017-02-16
+" @Revision:    44
 " GetLatestVimScripts: 5526 0 :AutoInstall: autopack.vim
 " Load VIM packages as needed
 
@@ -66,7 +66,11 @@ augroup Autopack
 augroup END
 
 
-exec 'runtime!' g:autopack_config
+if has('vim_starting')
+    autocmd Autopack VimEnter * exec 'runtime!' g:autopack_config
+else
+    exec 'runtime!' g:autopack_config
+endif
 
 
 let &cpo = s:save_cpo
