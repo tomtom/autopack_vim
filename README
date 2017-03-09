@@ -1,9 +1,15 @@
-This plugins aims at facilitating the handling of optional packs by 
-loading packs when certain triggers are invokes. A trigger could be
+VIM 8.0 introduced a new way to handle (optional) plugins via the 
+|:packload| command. This plugin aims at facilitating the handling of 
+optional packs by loading packs when certain triggers are invoked. The 
+goal of this approach is to reduce startup time without interferring 
+with your workflow.
+
+A trigger could be
 - Invocation of a command (see |:Autocommand|)
 - Invocation of a map (see |:Automap|)
 - Editing a file with a specific filetype (see |:Autofiletype|)
-- Editing a file matching a specific file pattern (see |:Autofilepattern|)
+- Editing a file matching a specific file pattern (see 
+  |:Autofilepattern|)
 
 How to use this plugin~
 - Edit ~/.vim/packrc/autorc.vim
@@ -32,9 +38,6 @@ or install from github:
     - Start a terminal
     - Change the working directory to `~/.vim/pack/tml/start/`
     - Type: `git clone https://github.com/tomtom/autopack_vim`
-
-NOTE: If you don't want to run this plugin on startup, use 
-`~/.vim/pack/tml/opt/`.
 
 NOTE: On Windows, ~/.vim might be ~/vimfiles. Please see 'runtimepath' 
 for details.
