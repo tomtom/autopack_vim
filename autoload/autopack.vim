@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-02-15
-" @Revision:    140
+" @Last Change: 2017-03-16
+" @Revision:    179
 
 
 if !exists('g:loaded_tlib') " optional
@@ -22,6 +22,13 @@ endif
 
 if !exists('g:autopack#verbose')
     let g:autopack#verbose = &verbose >= 2   "{{{2
+endif
+
+
+if !exists('g:autopack#prelude_ignore_filenames_rx')
+    " When creating |g:autopack_prelude|, ignore filenames matching this 
+    " |regexp|.
+    let g:autopack#prelude_ignore_filenames_rx = ''   "{{{2
 endif
 
 
@@ -358,6 +365,47 @@ function! s:Message(text) abort "{{{3
         echohl Message
         echom a:text
         echohl NONE
+    endif
+endf
+
+
+" Generate the |g:autopack_prelude|, which currently only includes:
+" - ftdetect files
+function! autopack#CompilePrelude() abort "{{{3
+    let packrcs = globpath(&rtp, g:autopack_configs_dir, 0, 1)
+    if empty(packrcs)
+        echoerr 'Cannot find' g:autopack_configs_dir 'in &runtimepath'
+    else
+        let lines = []
+        let ftdetect = globpath(&packpath, 'pack/*/opt/*/ftdetect/*.vim', 0, 1)
+        if !empty(g:autopack#prelude_ignore_filenames_rx)
+            let ftdetect = filter(ftdetect, 'v:val !~# g:autopack#prelude_ignore_filenames_rx')
+        endif
+        if !empty(ftdetect)
+            let pattern_done = {}
+            for filename in ftdetect
+                let pack = matchstr(filename, '[\/]pack[\/][^\/]\+[\/]opt[\/]\zs[^\/]\+')
+                let flines = readfile(filename)
+                for fline in flines
+                    let patterns = matchstr(fline, '^\s*au\%[tocmd]\s\+\S\{-}\<\%(BufNewFile\|BufRead\)\>\S*\s\+\zs\S\+')
+                    for pattern in split(patterns, ',')
+                        let id = pack .'|'. pattern
+                        if !empty(pattern) && !has_key(pattern_done, id)
+                            let pattern_done[id] = 1
+                            call add(lines, printf('Autofilepattern %s %s', pack, pattern))
+                        endif
+                    endfor
+                endfor
+                " let flines = filter(flines, 'v:val !~# ''^\s*aug\%[roup]\>''')
+                " let lines += flines
+            endfor
+        endif
+        let lines = filter(lines, 'v:val =~# ''\S'' && v:val !~# ''^\s*"''')
+        call insert(lines, '" This file was automatically generated. Do not edit!')
+        let prelude = substitute(packrcs[0], '[\/]*$', '/', '') . g:autopack_prelude
+        Tlibtrace 'autopack', prelude, len(lines)
+        call writefile(lines, prelude)
+        echom 'Autopack: Wrote' prelude
     endif
 endf
 
