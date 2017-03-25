@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-03-16
-" @Revision:    179
+" @Last Change: 2017-03-22
+" @Revision:    183
 
 
 if !exists('g:loaded_tlib') " optional
@@ -17,6 +17,15 @@ endif
 
 if !exists('g:autopack#packf')
     let g:autopack#packf = ['%s_vim', '%s.vim', 'vim-%s']   "{{{2
+endif
+
+
+if !exists('g:autopack#use_cmdundefined')
+    " If true, use the |CmdUndefined| event for |:Autocommand|. This has 
+    " the disadvantage that the command isn't known to vim. Hence, 
+    " command-line completion doesn't work. It has the advantage that 
+    " the functionality is provided by vim.
+    let g:autopack#use_cmdundefined = 0   "{{{2
 endif
 
 
@@ -35,11 +44,15 @@ endif
 function! autopack#NewAutocommand(args) abort "{{{3
     let [pack; cmds] = a:args
     for cmd in cmds
-        exec printf('command! -bang -nargs=? %s call s:Loadcommand(%s, %s, %s .''<bang> ''. <q-args>)',
-                    \ cmd,
-                    \ string(pack),
-                    \ string(cmd),
-                    \ string(cmd))
+        if g:autopack#use_cmdundefined
+            exec 'autocmd Autopack CmdUndefined' cmd 'packadd' pack
+        else
+            exec printf('command! -bang -nargs=? %s call s:Loadcommand(%s, %s, %s .''<bang> ''. <q-args>)',
+                        \ cmd,
+                        \ string(pack),
+                        \ string(cmd),
+                        \ string(cmd))
+        endif
     endfor
 endf
 
