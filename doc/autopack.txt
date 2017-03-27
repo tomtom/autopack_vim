@@ -63,6 +63,7 @@ Contents~
         :Autofiletype ............................ |:Autofiletype|
         :Autofilepattern ......................... |:Autofilepattern|
         :Automakeprelude ......................... |:Automakeprelude|
+        g:autopack#use_cmdundefined .............. |g:autopack#use_cmdundefined|
         g:autopack#prelude_ignore_filenames_rx ... |g:autopack#prelude_ignore_filenames_rx|
         autopack#NewMap .......................... |autopack#NewMap()|
         autopack#CompilePrelude .................. |autopack#CompilePrelude()|
@@ -119,6 +120,13 @@ g:autopack_prelude             (default: 'prelude.vim')
 
 ------------------------------------------------------------------------
                                                     *autoload/autopack.vim*
+                                                    *g:autopack#use_cmdundefined*
+g:autopack#use_cmdundefined    (default: 0)
+    If true, use the |CmdUndefined| event for |:Autocommand|. This has 
+    the disadvantage that the command isn't known to vim. Hence, 
+    command-line completion doesn't work. It has the advantage that 
+    the functionality is provided by vim.
+
                                                     *g:autopack#prelude_ignore_filenames_rx*
 g:autopack#prelude_ignore_filenames_rx (default: '')
     When creating |g:autopack_prelude|, ignore filenames matching this 
