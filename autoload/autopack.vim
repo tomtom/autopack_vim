@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-03-22
-" @Revision:    183
+" @Last Change: 2017-03-26
+" @Revision:    187
 
 
 if !exists('g:loaded_tlib') " optional
@@ -44,14 +44,18 @@ endif
 function! autopack#NewAutocommand(args) abort "{{{3
     let [pack; cmds] = a:args
     for cmd in cmds
-        if g:autopack#use_cmdundefined
-            exec 'autocmd Autopack CmdUndefined' cmd 'packadd' pack
+        if exists(':'. cmd) == 2
+            echom 'Autopack: Skip already defined command:' cmd
         else
-            exec printf('command! -bang -nargs=? %s call s:Loadcommand(%s, %s, %s .''<bang> ''. <q-args>)',
-                        \ cmd,
-                        \ string(pack),
-                        \ string(cmd),
-                        \ string(cmd))
+            if g:autopack#use_cmdundefined
+                exec 'autocmd Autopack CmdUndefined' cmd 'packadd' pack
+            else
+                exec printf('command! -bang -nargs=? %s call s:Loadcommand(%s, %s, %s .''<bang> ''. <q-args>)',
+                            \ cmd,
+                            \ string(pack),
+                            \ string(cmd),
+                            \ string(cmd))
+            endif
         endif
     endfor
 endf
@@ -277,47 +281,52 @@ function! autopack#NewMap(args) abort "{{{3
     let nargs = len(margs)
     while idx < nargs
         let item = margs[idx]
-        if mode == 'cmd'
+        if mode ==# 'cmd'
             if item =~# '^.\?\(nore\)\?map$'
                 let mcmd = item
             else
                 let mode = 'args'
                 continue
             endif
-        elseif mode == 'args'
+        elseif mode ==# 'args'
             if item =~# '^<\(buffer\|nowait\|silent\|special\|script\|expr\|unique\)>$'
                 call add(args, item)
             else
                 let mode = 'lhs'
                 continue
             endif
-        elseif mode == 'lhs'
+        elseif mode ==# 'lhs'
             let lhs = item
             let mode = 'rhs'
-        elseif mode == 'rhs'
+        elseif mode ==# 'rhs'
             let rhs = join(margs[idx : -1])
             break
         endif
         let idx += 1
     endwh
     Tlibtrace 'autopack', mcmd, lhs, rhs
-    let sargs = join(args)
-    let unmap = substitute(mcmd, '\(nore\)\?\zemap$', 'un', '')
-    call s:AddUndefine(pack, unmap .' '. lhs)
-    if empty(rhs)
-        let rhs1 = rhs
+    let mapmode = matchstr(mcmd, '^.\?\ze\(nore\)\?map$')
+    if !empty(maparg(lhs, mapmode))
+        echom 'Autopack: Skip already defined map:' mcmd lhs rhs
     else
-        let undef = printf('%s %s %s %s', mcmd, sargs, lhs, rhs)
-        call s:AddUndefine(pack, undef)
-        let rhs1 = substitute(rhs, '<', '<lt>', 'g')
+        let sargs = join(args)
+        let unmap = substitute(mcmd, '\(nore\)\?\zemap$', 'un', '')
+        call s:AddUndefine(pack, unmap .' '. lhs)
+        if empty(rhs)
+            let rhs1 = rhs
+        else
+            let undef = printf('%s %s %s %s', mcmd, sargs, lhs, rhs)
+            call s:AddUndefine(pack, undef)
+            let rhs1 = substitute(rhs, '<', '<lt>', 'g')
+        endif
+        let lhs1 = substitute(lhs, '<', '<lt>', 'g')
+        let [pre, post] = s:GetMapPrePost(mcmd)
+        let cmd = printf('%s:call <SID>Autopackmap(%s, %s, %s, %s, %s)<cr>%s',
+                    \ pre, string(mcmd), string(sargs), string(lhs1), string(pack), string(rhs1), post)
+        let map = [mcmd, sargs, lhs, cmd]
+        Tlibtrace 'autopack', map
+        exec join(map)
     endif
-    let lhs1 = substitute(lhs, '<', '<lt>', 'g')
-    let [pre, post] = s:GetMapPrePost(mcmd)
-    let cmd = printf('%s:call <SID>Autopackmap(%s, %s, %s, %s, %s)<cr>%s',
-                \ pre, string(mcmd), string(sargs), string(lhs1), string(pack), string(rhs1), post)
-    let map = [mcmd, sargs, lhs, cmd]
-    Tlibtrace 'autopack', map
-    exec join(map)
 endf
 
 
