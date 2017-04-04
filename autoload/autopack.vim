@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-03-26
-" @Revision:    187
+" @Last Change: 2017-04-03
+" @Revision:    202
 
 
 if !exists('g:loaded_tlib') " optional
@@ -193,10 +193,14 @@ let s:filepatternpacks = {}
 
 function! autopack#NewFilepattern(args) abort "{{{3
     let [pack; filepatterns] = a:args
-    let frxs = map(filepatterns, {i, p -> glob2regpat(p)})
+    let frxs = map(filepatterns, 'glob2regpat(v:val)')
+    Tlibtrace 'autopack', pack, filepatterns, frxs
     for frx in frxs
-        let fpacks = get(s:filetypepacks, frx, [])
-        call add(fpacks, pack)
+        if !has('fname_case')
+            let frx = '\c'. frx
+        endif
+        let fpacks = get(s:filepatternpacks, frx, [])
+        let fpacks = add(fpacks, pack)
         let s:filepatternpacks[frx] = fpacks
     endfor
 endf
@@ -205,7 +209,7 @@ endf
 function! autopack#Filetypepatterns(filename) abort "{{{3
     Tlibtrace 'autopack', a:filename
     for [frx, packs] in items(s:filepatternpacks)
-        if has('fname_case') ? a:filename =~# frx : a:filename =~? frx
+        if a:filename =~# frx
             Tlibtrace 'autopack', frx, packs
             unlet! s:filepatternpacks[frx]
             for pack in packs
@@ -393,7 +397,7 @@ endf
 
 " Generate the |g:autopack_prelude|, which currently only includes:
 " - ftdetect files
-function! autopack#CompilePrelude() abort "{{{3
+function! autopack#MakePrelude() abort "{{{3
     let packrcs = globpath(&rtp, g:autopack_configs_dir, 0, 1)
     if empty(packrcs)
         echoerr 'Cannot find' g:autopack_configs_dir 'in &runtimepath'

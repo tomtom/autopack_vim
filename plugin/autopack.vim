@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-03-18
-" @Revision:    57
+" @Last Change: 2017-04-03
+" @Revision:    59
 " GetLatestVimScripts: 5526 0 :AutoInstall: autopack.vim
 " Load VIM packages as needed
 
@@ -63,10 +63,10 @@ command! -nargs=+ Autofilepattern call autopack#NewFilepattern([<f-args>])
 " command! -nargs=+ Autoautoload call autopack#Autoautoload(<q-args>)
 " command! -nargs=+ Autofunction call autopack#Autofunction(<q-args>)
 
-" Create |g:autopack_prelude|. See also |autopack#CompilePrelude()|.
+" Create |g:autopack_prelude|. See also |autopack#MakePrelude()|.
 " Users can run this command to enable filetype detection etc. for 
 " optional packages.
-command! -bar Automakeprelude call autopack#CompilePrelude()
+command! -bar Automakeprelude call autopack#MakePrelude()
 
 
 augroup Autopack
