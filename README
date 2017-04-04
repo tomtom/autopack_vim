@@ -15,6 +15,8 @@ How to use this plugin~
 - Edit ~/.vim/packrc/autorc.vim
 - Add autopack commands (|:Autocommand|, |:Automap|, |:Autofiletype|, 
   |:Autofilepattern| as needed)
+- Optionally, run |:Automakeprelude| in order to collect |filetype-detect| 
+  information from optional plugins. This will be loaded on startup.
 - "Filetype packs", i.e. packs matching `pack/ft_{FILETYPE}/opt/*` in 
   you 'runtimepath' are automatically enabled when editing a file with 
   the respective filetype

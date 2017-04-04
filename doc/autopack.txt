@@ -18,6 +18,8 @@ How to use this plugin~
 - Edit ~/.vim/packrc/autorc.vim
 - Add autopack commands (|:Autocommand|, |:Automap|, |:Autofiletype|, 
   |:Autofilepattern| as needed)
+- Optionally, run |:Automakeprelude| in order to collect |filetype-detect| 
+  information from optional plugins. This will be loaded on startup.
 - "Filetype packs", i.e. packs matching `pack/ft_{FILETYPE}/opt/*` in 
   you 'runtimepath' are automatically enabled when editing a file with 
   the respective filetype
@@ -66,7 +68,7 @@ Contents~
         g:autopack#use_cmdundefined .............. |g:autopack#use_cmdundefined|
         g:autopack#prelude_ignore_filenames_rx ... |g:autopack#prelude_ignore_filenames_rx|
         autopack#NewMap .......................... |autopack#NewMap()|
-        autopack#CompilePrelude .................. |autopack#CompilePrelude()|
+        autopack#MakePrelude ..................... |autopack#MakePrelude()|
 
 
 ------------------------------------------------------------------------
@@ -113,7 +115,7 @@ g:autopack_prelude             (default: 'prelude.vim')
 
                                                     *:Automakeprelude*
 :Automakeprelude
-    Create |g:autopack_prelude|. See also |autopack#CompilePrelude()|.
+    Create |g:autopack_prelude|. See also |autopack#MakePrelude()|.
     Users can run this command to enable filetype detection etc. for 
     optional packages.
 
@@ -139,8 +141,8 @@ autopack#NewMap(args)
       call autopack#Map(['tmarks_vim', '<silent> <f2> :TMarks<cr>'])
       call autopack#Map(['tmarks_vim', '<silent>', '<f2>', ':TMarks<cr>'])
 
-                                                    *autopack#CompilePrelude()*
-autopack#CompilePrelude()
+                                                    *autopack#MakePrelude()*
+autopack#MakePrelude()
     Generate the |g:autopack_prelude|, which currently only includes:
     - ftdetect files
 
