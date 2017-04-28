@@ -16,7 +16,7 @@ A trigger could be
 
 - Edit ~/.vim/packrc/autorc.vim
 - Add autopack commands (`:Autocommand`, `:Automap`, `:Autofiletype`, 
-  `:Autofilepattern` as needed)
+  `:Autofilepattern`) as needed
 - Optionally, run `:Automakeprelude` in order to collect `filetype-detect` 
   information from optional plugins. This will be loaded on startup.
 - "Filetype packs", i.e. packs matching `pack/ft_{FILETYPE}/opt/*` in 
@@ -24,7 +24,7 @@ A trigger could be
   the respective filetype
 - Restart vim
 
-Example autorc.vim file >
+Example `autorc.vim` file >
 
     Automap ttoc_vim nnoremap \<Leader>cc :TToC\<cr>
     Autocommand trag_vim Trag
