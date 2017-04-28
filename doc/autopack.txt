@@ -22,6 +22,9 @@ How to use this plugin~
   |:Autofilepattern|) as needed
 - Optionally, run |:Automakeprelude| in order to collect |filetype-detect| 
   information from optional plugins. This will be loaded on startup.
+- Optionally, configure (optional) plugins in packs (i.e. plugins in 
+  `pack/PACK/opt/PLUGIN`) via `packrc/before/PLUGIN.vim` and 
+  `packrc/after/PLUGIN.vim` scripts)
 - "Filetype packs", i.e. packs matching `pack/ft_{FILETYPE}/opt/*` in 
   you 'runtimepath' are automatically enabled when editing a file with 
   the respective filetype
