@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-04-03
-" @Revision:    202
+" @Last Change: 2017-04-28
+" @Revision:    210
 
 
 if !exists('g:loaded_tlib') " optional
@@ -71,10 +71,10 @@ endf
 let s:undefine = {}
 
 
-function! s:AddUndefine(pack, undef) "{{{3
+function! s:AddUndefine(pack, undef) abort "{{{3
     Tlibtrace 'autopack', a:pack, a:undef
     if empty(a:pack)
-        echoerr string(a:plugins) a:undef
+        echoerr string(a:pack) a:undef
     endif
     if !has_key(s:undefine, a:pack)
         let s:undefine[a:pack] = [a:undef]
@@ -153,10 +153,10 @@ function! s:Loadplugin(pack) abort "{{{3
         if exists(':packadd') == 2
             exec 'packadd' fnameescape(pack)
         else
-            let rtp = split(&rtp, ',')
-            let rtp1 = join(map(globpath(&rtp, 'pack/*/*/'. pack), 'escape(v:val, ",")') ',')
+            let rtp = split(&runtimepath, ',')
+            let rtp1 = join(map(globpath(&runtimepath, 'pack/*/*/'. pack), 'escape(v:val, ",")'), ',')
             call insert(rtp, rtp1, 1)
-            let &rtp = join(rtp, ',')
+            let &runtimepath = join(rtp, ',')
             exec 'runtime pack/*/*/'. pack .'/plugin/*.vim'
         endif
         call s:ConfigPack(pack, 'after')
@@ -242,7 +242,7 @@ function! autopack#AutoFiletype(ft) abort "{{{3
     if !has_key(s:loaded_ft, a:ft)
         let s:loaded_ft[a:ft] = 1
         call s:ConfigPack(a:ft, 'ft')
-        let packs = globpath(&rtp, 'pack/ft_'. a:ft .'/opt/*', 0, 1)
+        let packs = globpath(&runtimepath, 'pack/ft_'. a:ft .'/opt/*', 0, 1)
         Tlibtrace 'autopack', packs
         if has_key(s:filetypepacks, a:ft)
             let packs = s:filetypepacks[a:ft]
@@ -334,7 +334,7 @@ function! autopack#NewMap(args) abort "{{{3
 endf
 
 
-function! s:GetMapPrePost(map) "{{{3
+function! s:GetMapPrePost(map) abort "{{{3
     let mode = matchstr(a:map, '\([incvoslx]\?\)\ze\(nore\)\?map')
     if mode ==# 'n'
         let pre  = ''
@@ -359,7 +359,7 @@ function! s:GetMapPrePost(map) "{{{3
 endf
 
 
-function! s:Autopackmap(mcmd, args, lhs, pack, rhs) "{{{3
+function! s:Autopackmap(mcmd, args, lhs, pack, rhs) abort "{{{3
     " TLogVAR a:mcmd, a:args, a:lhs, a:pack, a:rhs
     " let unmap = substitute(a:mcmd, '\(nore\)\?\zemap$', 'un', '')
     " " TLogVAR unmap, a:lhs
@@ -376,9 +376,9 @@ function! s:Autopackmap(mcmd, args, lhs, pack, rhs) "{{{3
     endif
     let lhs = substitute(lhs, '<\ze\w\+\(-\w\+\)*>', '\\<', 'g')
     let lhs = eval('"'. escape(lhs, '"') .'"')
-    if a:mcmd =~ '^[vx]'
+    if a:mcmd =~# '^[vx]'
         let lhs = 'gv'. lhs
-    elseif a:mcmd =~ '^[s]'
+    elseif a:mcmd =~# '^[s]'
         let lhs = "<c-g>gv". lhs
     endif
     " TLogVAR lhs
@@ -398,7 +398,7 @@ endf
 " Generate the |g:autopack_prelude|, which currently only includes:
 " - ftdetect files
 function! autopack#MakePrelude() abort "{{{3
-    let packrcs = globpath(&rtp, g:autopack_configs_dir, 0, 1)
+    let packrcs = globpath(&runtimepath, g:autopack_configs_dir, 0, 1)
     if empty(packrcs)
         echoerr 'Cannot find' g:autopack_configs_dir 'in &runtimepath'
     else
