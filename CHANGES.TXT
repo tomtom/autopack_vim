@@ -1,0 +1,9 @@
+version: "0.02"
+  - Autocommand, autopack#NewAutocommand: Support for multiple commands
+  - g:autopack_config: Check for has('vim_starting')
+  - NEW :Automakeprelude command (collect ftdetect information)
+  - g:autopack#use_cmdundefined: Option to use the CmdUndefined event
+  - Make sure not to redefine auto-commands or maps
+  - autopack#NewFilepattern(): FIX only the last plugins per pattern was loaded
+  MD5 checksum: e0525313c600e33aebb5f6f81bdbc90b
+
