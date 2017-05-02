@@ -1,15 +1,15 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-04-03
-" @Revision:    59
+" @Last Change: 2017-05-02
+" @Revision:    60
 " GetLatestVimScripts: 5526 0 :AutoInstall: autopack.vim
 " Load VIM packages as needed
 
 if &cp || exists('loaded_autopack')
     finish
 endif
-let loaded_autopack = 1
+let loaded_autopack = 2
 
 let s:save_cpo = &cpo
 set cpo&vim
