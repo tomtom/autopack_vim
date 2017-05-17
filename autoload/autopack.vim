@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-04-28
-" @Revision:    210
+" @Last Change: 2017-05-08
+" @Revision:    217
 
 
 if !exists('g:loaded_tlib') " optional
@@ -41,6 +41,11 @@ if !exists('g:autopack#prelude_ignore_filenames_rx')
 endif
 
 
+if !exists('g:autopack#use_packadd')
+    let g:autopack#use_packadd = exists(':packadd') == 2   "{{{2
+endif
+
+
 function! autopack#NewAutocommand(args) abort "{{{3
     let [pack; cmds] = a:args
     for cmd in cmds
@@ -48,7 +53,7 @@ function! autopack#NewAutocommand(args) abort "{{{3
             echom 'Autopack: Skip already defined command:' cmd
         else
             if g:autopack#use_cmdundefined
-                exec 'autocmd Autopack CmdUndefined' cmd 'packadd' pack
+                exec 'autocmd Autopack CmdUndefined' cmd 'call s:Loadplugin(' string(pack) ')'
             else
                 exec printf('command! -bang -nargs=? %s call s:Loadcommand(%s, %s, %s .''<bang> ''. <q-args>)',
                             \ cmd,
@@ -150,12 +155,18 @@ function! s:Loadplugin(pack) abort "{{{3
         endif
         call s:ConfigPack(pack, 'before')
         call s:Message('Autopack: Load plugin '. a:pack)
-        if exists(':packadd') == 2
+        if g:autopack#use_packadd
             exec 'packadd' fnameescape(pack)
         else
             let rtp = split(&runtimepath, ',')
-            let rtp1 = join(map(globpath(&runtimepath, 'pack/*/*/'. pack), 'escape(v:val, ",")'), ',')
-            call insert(rtp, rtp1, 1)
+            let paths = map(globpath(&runtimepath, 'pack/*/*/'. pack, 0, 1), 'fnamemodify(v:val, ":p")')
+            for path in paths
+                call insert(rtp, escape(substitute(path, '[\/]$', '', ''), ','), 1)
+                let after = path .'/after'
+                if isdirectory(after)
+                    call insert(rtp, escape(after, ','), -1)
+                endif
+            endfor
             let &runtimepath = join(rtp, ',')
             exec 'runtime pack/*/*/'. pack .'/plugin/*.vim'
         endif
