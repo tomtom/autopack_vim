@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-05-08
-" @Revision:    217
+" @Last Change: 2019-01-27
+" @Revision:    224
 
 
 if !exists('g:loaded_tlib') " optional
@@ -89,13 +89,12 @@ function! s:AddUndefine(pack, undef) abort "{{{3
 endf
 
 
-let s:loaded_config = {}
+let s:loaded_config = {'ft': {}, 'after': {}, 'before': {}}
 
 function! s:ConfigPack(packname, type) abort "{{{3
     Tlibtrace 'autopack', a:packname, a:type
-    let id = a:type .'|'. a:packname
-    if !has_key(s:loaded_config, id)
-        let s:loaded_config[id] = 1
+    if !has_key(s:loaded_config[a:type], a:packname)
+        let s:loaded_config[a:type][a:packname] = 1
         let cfg = g:autopack_configs_dir .'/'. a:type .'/'. a:packname .'.vim'
         Tlibtrace 'autopack', cfg
         call s:Message('Autopack: try loading "'. a:type .'" config for '. a:packname)
@@ -112,6 +111,19 @@ endf
 function! autopack#ConfigPack(filename) abort "{{{3
     let packname = s:GetPackName(a:filename)
     call s:ConfigPack(packname, 'before')
+endf
+
+
+function! autopack#AfterLoadingPack(filename) abort "{{{3
+    let packname = s:GetPackName(a:filename)
+    call s:ConfigPack(packname, 'after')
+endf
+
+
+function! autopack#Packadd(bang, packname) abort "{{{3
+    call s:ConfigPack(a:packname, 'before')
+    exec 'packadd'.a:bang a:packname
+    call s:ConfigPack(a:packname, 'after')
 endf
 
 
@@ -204,8 +216,9 @@ let s:filepatternpacks = {}
 
 function! autopack#NewFilepattern(args) abort "{{{3
     let [pack; filepatterns] = a:args
+    Tlibtrace 'autopack', pack, filepatterns
     let frxs = map(filepatterns, 'glob2regpat(v:val)')
-    Tlibtrace 'autopack', pack, filepatterns, frxs
+    Tlibtrace 'autopack', frxs
     for frx in frxs
         if !has('fname_case')
             let frx = '\c'. frx
@@ -424,14 +437,15 @@ function! autopack#MakePrelude() abort "{{{3
                 let pack = matchstr(filename, '[\/]pack[\/][^\/]\+[\/]opt[\/]\zs[^\/]\+')
                 let flines = readfile(filename)
                 for fline in flines
-                    let patterns = matchstr(fline, '^\s*au\%[tocmd]\s\+\S\{-}\<\%(BufNewFile\|BufRead\)\>\S*\s\+\zs\S\+')
-                    for pattern in split(patterns, ',')
+                    let pattern = matchstr(fline, '^\s*au\%[tocmd]\s\+\S\{-}\<\%(BufNewFile\|BufRead\)\>\S*\s\+\zs\S\+')
+                    " let patterns = matchstr(fline, '^\s*au\%[tocmd]\s\+\S\{-}\<\%(BufNewFile\|BufRead\)\>\S*\s\+\zs\S\+')
+                    " for pattern in split(patterns, ',')
                         let id = pack .'|'. pattern
                         if !empty(pattern) && !has_key(pattern_done, id)
                             let pattern_done[id] = 1
                             call add(lines, printf('Autofilepattern %s %s', pack, pattern))
                         endif
-                    endfor
+                    " endfor
                 endfor
                 " let flines = filter(flines, 'v:val !~# ''^\s*aug\%[roup]\>''')
                 " let lines += flines
