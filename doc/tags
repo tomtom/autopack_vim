@@ -1,0 +1,16 @@
+:Autocommand	autopack.txt	/*:Autocommand*
+:Autofilepattern	autopack.txt	/*:Autofilepattern*
+:Autofiletype	autopack.txt	/*:Autofiletype*
+:Automakeprelude	autopack.txt	/*:Automakeprelude*
+:Automap	autopack.txt	/*:Automap*
+:Autopackadd	autopack.txt	/*:Autopackadd*
+autoload/autopack.vim	autopack.txt	/*autoload\/autopack.vim*
+autopack#MakePrelude()	autopack.txt	/*autopack#MakePrelude()*
+autopack#NewMap()	autopack.txt	/*autopack#NewMap()*
+autopack.txt	autopack.txt	/*autopack.txt*
+g:autopack#prelude_ignore_filenames_rx	autopack.txt	/*g:autopack#prelude_ignore_filenames_rx*
+g:autopack#use_cmdundefined	autopack.txt	/*g:autopack#use_cmdundefined*
+g:autopack_config	autopack.txt	/*g:autopack_config*
+g:autopack_configs_dir	autopack.txt	/*g:autopack_configs_dir*
+g:autopack_prelude	autopack.txt	/*g:autopack_prelude*
+plugin/autopack.vim	autopack.txt	/*plugin\/autopack.vim*
