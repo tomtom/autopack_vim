@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2019-01-27
-" @Revision:    68
+" @Last Change: 2019-02-15
+" @Revision:    69
 " GetLatestVimScripts: 5526 0 :AutoInstall: autopack.vim
 " Load VIM packages as needed
 
@@ -71,7 +71,7 @@ command! -nargs=+ Autofilepattern call autopack#NewFilepattern([<f-args>])
 command! -bar Automakeprelude call autopack#MakePrelude()
 
 " Load a pack and load user configuration files
-command! -bang -bar -complete=packadd Autopackadd call autopack#Packadd("<bang>", <q-args>)
+command! -bang -bar -nargs=+ -complete=packadd Autopackadd call autopack#Packadd("<bang>", <q-args>)
 
 
 augroup Autopack
