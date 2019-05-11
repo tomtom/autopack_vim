@@ -1,17 +1,13 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2019-01-27
-" @Revision:    224
+" @Last Change: 2019-04-23
+" @Revision:    225
 
 
 if !exists('g:loaded_tlib') " optional
     " :nodoc:
     command! -nargs=+ -bang Tlibtrace :
-    " :nodoc:
-    command! -nargs=+ -bang Tlibassert :
-    " :nodoc:
-    command! -nargs=+ Tlibtype :
 endif
 
 
